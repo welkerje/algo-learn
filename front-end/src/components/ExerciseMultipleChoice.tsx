@@ -1,9 +1,6 @@
 import { useState } from "react"
 
-import {
-  MultipleChoiceFeedback,
-  MultipleChoiceQuestion,
-} from "../../../shared/src/api/QuestionGenerator"
+import { MultipleChoiceFeedback, MultipleChoiceQuestion } from "../../../shared/src/api/QuestionGenerator"
 import useGlobalDOMEvents from "../hooks/useGlobalDOMEvents"
 import { useSound } from "../hooks/useSound"
 import { useTranslation } from "../hooks/useTranslation"
@@ -41,9 +38,7 @@ export function ExerciseMultipleChoice({
     mode: (question.sorting ? "draft" : "invalid") as MODE,
 
     /** The indices of the selected answers */
-    choice: (question.sorting
-      ? [...Array(question.answers.length).keys()]
-      : []) as Array<number>,
+    choice: (question.sorting ? [...Array(question.answers.length).keys()] : []) as Array<number>,
 
     /**
      * The feedback object returned by question.feedback(). Will be set when the
@@ -73,9 +68,7 @@ export function ExerciseMultipleChoice({
    * @param value Whether the entry should be chosen
    */
   function setChoiceEntry(key: number, value: boolean): void {
-    const newChoice = question.allowMultiple
-      ? choice.filter((x) => x !== key)
-      : []
+    const newChoice = question.allowMultiple ? choice.filter((x) => x !== key) : []
     if (value) {
       newChoice.push(key)
     }
@@ -90,19 +83,17 @@ export function ExerciseMultipleChoice({
     if (mode === "draft") {
       if (question.feedback !== undefined) {
         setState({ ...state, mode: "submitted" })
-        void Promise.resolve(question.feedback({ choice })).then(
-          (feedbackObject) => {
-            let mode: MODE = "draft"
-            if (feedbackObject.correct === true) {
-              playSound("pass")
-              mode = "correct"
-            } else if (feedbackObject.correct === false) {
-              playSound("fail")
-              mode = "incorrect"
-            }
-            setState({ ...state, mode, feedbackObject })
-          },
-        )
+        void Promise.resolve(question.feedback({ choice })).then((feedbackObject) => {
+          let mode: MODE = "draft"
+          if (feedbackObject.correct === true) {
+            playSound("pass")
+            mode = "correct"
+          } else if (feedbackObject.correct === false) {
+            playSound("fail")
+            mode = "incorrect"
+          }
+          setState({ ...state, mode, feedbackObject })
+        })
       }
     } else if (mode === "correct" || mode === "incorrect") {
       onResult && onResult(mode)
@@ -138,24 +129,27 @@ export function ExerciseMultipleChoice({
   })
 
   if (!question.sorting) {
-    let message = null
+    const message = []
     if (mode === "correct") {
-      message = <b className="text-2xl">Correct!</b>
+      message.push(<b className="text-2xl">Correct!</b>)
     } else if (mode === "incorrect") {
-      message = feedbackObject?.correctChoice ? (
-        <>
-          <b className="text-xl">
-            Correct solution
-            {feedbackObject.correctChoice.length > 1 ? "s" : ""}:
-          </b>
-          <br />
-          {feedbackObject.correctChoice.map((item, index) => (
-            <div key={index}>{<Markdown md={question.answers[item]} />}</div>
-          ))}
-        </>
-      ) : (
-        <>Incorrect</>
+      message.push(
+        feedbackObject?.correctChoice ? (
+          <>
+            <b className="text-xl">
+              Correct solution
+              {feedbackObject.correctChoice.length > 1 ? "s" : ""}:
+            </b>
+            <br />
+            {feedbackObject.correctChoice.map((item, index) => (
+              <div key={index}>{<Markdown md={question.answers[item]} />}</div>
+            ))}
+          </>
+        ) : (
+          <>Incorrect</>
+        ),
       )
+      if (feedbackObject?.feedbackText) message.push(<Markdown md={feedbackObject.feedbackText} />)
     }
     return (
       <InteractWithQuestion
@@ -216,8 +210,7 @@ export function ExerciseMultipleChoice({
         element: <Markdown md={question.answers[position]} />,
       })
     }
-    const onChange = (newItems: Array<BaseItem>) =>
-      setChoice(newItems.map((item) => item.position))
+    const onChange = (newItems: Array<BaseItem>) => setChoice(newItems.map((item) => item.position))
 
     return (
       <InteractWithQuestion
@@ -229,12 +222,7 @@ export function ExerciseMultipleChoice({
         handleFooterClick={handleClick}
       >
         <Markdown md={question.text ?? ""} />
-        <SortableList
-          items={items}
-          onChange={onChange}
-          className="p-5"
-          disabled={mode !== "draft"}
-        />
+        <SortableList items={items} onChange={onChange} className="p-5" disabled={mode !== "draft"} />
       </InteractWithQuestion>
     )
   }

@@ -197,9 +197,29 @@ export class BST {
     return result
   }
 
+  levelOrder() {
+    const result: number[] = []
+    let queue = [this.root]
+    while (queue.length > 0) {
+      const newQueue = []
+      for (let i = 0; i < queue.length; i++) {
+        const node = queue[i]
+        if (node !== null) {
+          result.push(node.value)
+          newQueue.push(node.left)
+          newQueue.push(node.right)
+        }
+      }
+      queue = newQueue
+    }
+    return result
+  }
+
   /**
    * Just provides a simple (ugly) print of the tree.
    * To verify the tree structure.
+   *
+   * TODO: improve this function for better output
    *
    * 8
    * null 19

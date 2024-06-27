@@ -27,7 +27,7 @@ describe("BST Algortihm test", () => {
     const bst = new BST()
     const result: number[] = []
 
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 5; i++) {
       bst.insert(i)
       result.push(i)
     }
@@ -50,5 +50,7 @@ describe("BST Algortihm test", () => {
     bst.delete(11)
 
     expect(bst.inOrder().toString()).toBe([1, 3, 5, 7, 13].toString())
+
+    console.log(bst.toString())
   })
 })

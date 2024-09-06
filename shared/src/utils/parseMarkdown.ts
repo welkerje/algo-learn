@@ -9,6 +9,7 @@ export const codeRegex = /`([^`]+)`/
 export const squareBracketRegex = /\\\[(.*?)\\\]/
 export const dollarRegex = /\$([^$]+)\$/
 export const boldRegex = /\*\*([^*]+)\*\*/
+export const explanationRegex = /%%([\s\S]+?)%%/
 export const italicRegex = /\*([^*]+)\*/
 export const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/
 export const tableRegex = /^(\|(?:[^\r\n|]*\|?)+(\r?\n\|(?:[^\r\n|]*\|?)+)*)/m
@@ -34,6 +35,7 @@ export type ParseTreeNode =
     }
   | { kind: "input"; child: string }
   | { kind: "list"; child: ListItem[] }
+  | { kind: "%%"; child: string; id: string }
 
 /**
  * The parseMarkdown function parses markdown-like text into a parse tree.
@@ -52,6 +54,7 @@ export function parseMarkdown(md: string): ParseTree {
     { regex: inputRegex, kind: "input", markdown: false },
     { regex: codeRegex, kind: "`", markdown: false },
     { regex: squareBracketRegex, kind: "$$", markdown: false },
+    { regex: explanationRegex, kind: "%%", markdown: false },
     { regex: dollarRegex, kind: "$", markdown: false },
     { regex: boldRegex, kind: "**", markdown: true },
     { regex: italicRegex, kind: "*", markdown: true },
@@ -85,6 +88,17 @@ export function parseMarkdown(md: string): ParseTree {
         const node: ParseTreeNode = {
           kind,
           child: parseTable(match[0]),
+        }
+        const before = md.slice(0, match.index)
+        const after = md.slice(match.index + match[0].length)
+        return [...parseMarkdown(before), node, ...parseMarkdown(after)]
+      }
+      if (kind === "%%") {
+        const splitMatch = match[1].split("#")
+        const node: ParseTreeNode = {
+          kind,
+          child: splitMatch[0],
+          id: splitMatch[1],
         }
         const before = md.slice(0, match.index)
         const after = md.slice(match.index + match[0].length)

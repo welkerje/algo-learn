@@ -23,7 +23,7 @@ const translations: Translations = {
     checkFormatBool: "Please only enter *true* or *false*",
     stackEmpty: "Currently the stack is empty.",
     stackContainsValues: `The stack contains the following elements (*with the top at the highest index*):`,
-    freeTextInput: `Consider a **Stack "S"**. {{0}} **We perform the following operations:** {{1}}`,
+    freeTextInput: `Consider a %%**Stack**#Stack%% **"S"**. {{0}} **We perform the following operations:** {{1}}`,
   },
   de: {
     name: "Stacks",
@@ -34,7 +34,7 @@ const translations: Translations = {
     checkFormatBool: "Bitte gib nur *true* oder *false* ein.",
     stackEmpty: "Der Stack ist aktuell leer.",
     stackContainsValues: `Der Stack enthält folgende Elemente (*mit dem Top-Element am höchsten Index*):`,
-    freeTextInput: `Betrachte einen **Stack "S"**. {{0}} **Wir führen nun folgende Operationen aus:** {{1}}`,
+    freeTextInput: `Betrachte einen %%**Stack**#Stack%% **"S"**. {{0}} **Wir führen nun folgende Operationen aus:** {{1}}`,
   },
 }
 

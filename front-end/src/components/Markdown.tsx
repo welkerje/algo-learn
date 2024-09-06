@@ -7,6 +7,7 @@ import { ArrayDisplay } from "@/components/ArrayDisplay.tsx"
 import { DrawList } from "@/components/DrawList.tsx"
 import { DrawPseudoCode } from "@/components/DrawPseudoCode.tsx"
 import { DrawTable } from "@/components/DrawTable.tsx"
+import { BoxMarkdownView } from "@/components/explanationViews.tsx"
 import { FormInputField } from "@/components/ui/FormInputField.tsx"
 import { useTheme } from "../hooks/useTheme"
 import { Format } from "./Format"
@@ -80,6 +81,9 @@ export const MarkdownTreeNode: FunctionComponent<{
         <MarkdownTree parseTree={parseTreeNode.child} />
       </b>
     )
+  }
+  if (parseTreeNode.kind === "%%") {
+    return <BoxMarkdownView text={parseTreeNode.child} id={parseTreeNode.id} />
   }
   if (parseTreeNode.kind === "*") {
     return (

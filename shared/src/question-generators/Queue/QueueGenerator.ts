@@ -23,7 +23,9 @@ const translations: Translations = {
     checkFormatBool: "Please only enter *false* or *true*",
     queueEmpty: "Currently the queue is empty.",
     queueContainsValues: `The queue currently contains the following elements (*with the front at the lowest index*):`,
-    freeTextInput: `Consider a **Queue "Q"**. ` + `{{0}} **We perform the following operations:** {{1}}`,
+    freeTextInput:
+      `Consider a %%**Queue**#Queue%% **"Q"**. ` +
+      `{{0}} **We perform the following operations:** {{1}}`,
   },
   de: {
     name: "Queues",
@@ -35,7 +37,8 @@ const translations: Translations = {
     queueEmpty: "Die Queue ist aktuell leer.",
     queueContainsValues: `Die Queue enthält aktuell folgende Elemente (*mit dem Front-Element am niedrigsten Index*):`,
     freeTextInput:
-      `Betrachte eine **Queue "Q"**. ` + `{{0}} **Wir führen die folgenden Operationen aus:** {{1}}`,
+      `Betrachte eine %%**Queue**#Queue%% **"Q"**. ` +
+      `{{0}} **Wir führen die folgenden Operationen aus:** {{1}}`,
   },
 }
 

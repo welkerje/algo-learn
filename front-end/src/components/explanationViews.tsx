@@ -1,4 +1,5 @@
 import { ReactElement } from "react"
+import { explanationSheets } from "@shared/wiki/wikiListing.ts"
 import { Markdown } from "@/components/Markdown.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import {
@@ -11,7 +12,6 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet.tsx"
 import { useTranslation } from "@/hooks/useTranslation.ts"
-import { explanationSheets } from "@/routes/explanations/explanationSheetsUtils.tsx"
 
 export function BoxMarkdownView({ text, id }: { text: string; id: string }): ReactElement {
   if (!Object.keys(explanationSheets).includes(id)) {
@@ -22,7 +22,7 @@ export function BoxMarkdownView({ text, id }: { text: string; id: string }): Rea
     <Sheet>
       <SheetTrigger asChild>
         <div
-          className={`transform-origin-center -my-2 inline-block transform cursor-pointer rounded-sm border border-gray-400 border-opacity-25 px-1 py-0.5 leading-none transition-transform hover:scale-105 hover:border-opacity-100`}
+          className={`transform-origin-center -my-2 inline-block transform cursor-pointer rounded-sm border border-gray-400 border-opacity-50 px-1 py-0.5 leading-none transition-transform hover:scale-105 hover:border-opacity-100`}
         >
           <Markdown md={text} />
         </div>
@@ -33,14 +33,16 @@ export function BoxMarkdownView({ text, id }: { text: string; id: string }): Rea
 }
 
 function ExplanationSheet({ id }: { id: string }): ReactElement {
-  const { t } = useTranslation()
+  const { t, lang } = useTranslation()
 
   return (
     <SheetContent className={`w-[450px] overflow-y-auto sm:w-[600px]`} side="right">
       <SheetHeader>
         <SheetTitle>{t("header")}</SheetTitle>
       </SheetHeader>
-      <div className={`my-5`}>{explanationSheets[id]}</div>
+      <div className={`my-5`}>
+        <Markdown md={explanationSheets[id][lang]} />
+      </div>
       <SheetFooter>
         <SheetClose asChild>
           <Button>{t("Back")}</Button>

@@ -1,4 +1,4 @@
-import { Fragment, FunctionComponent, ReactNode } from "react"
+import { Fragment, FunctionComponent, ReactElement, ReactNode } from "react"
 import { Link } from "react-router-dom"
 import SyntaxHighlighter from "react-syntax-highlighter"
 import { solarizedDark, solarizedLight } from "react-syntax-highlighter/dist/esm/styles/hljs"
@@ -82,8 +82,40 @@ export const MarkdownTreeNode: FunctionComponent<{
       </b>
     )
   }
-  if (parseTreeNode.kind === "%%") {
+  if (parseTreeNode.kind === "[[") {
     return <BoxMarkdownView text={parseTreeNode.child} id={parseTreeNode.id} />
+  }
+  if (parseTreeNode.kind === "#") {
+    const headerTextSizeMatching: { [key: number]: string } = {
+      1: "text-4xl",
+      2: "text-3xl",
+      3: "text-2xl",
+      4: "text-xl",
+      5: "text-lg",
+      6: "text-base",
+    }
+
+    const HeaderTag = `h${parseTreeNode.tags}` as ReactElement["type"]
+    return (
+      <HeaderTag className={`${headerTextSizeMatching[parseTreeNode.tags]} font-bold`}>
+        {parseTreeNode.child}
+      </HeaderTag>
+    )
+  }
+  if (parseTreeNode.kind === "\n") {
+    return (
+      <>
+        <br></br>
+        <br></br>
+      </>
+    )
+  }
+  if (parseTreeNode.kind === " ") {
+    return (
+      <>
+        <br></br>
+      </>
+    )
   }
   if (parseTreeNode.kind === "*") {
     return (

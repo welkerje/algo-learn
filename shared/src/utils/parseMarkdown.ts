@@ -9,12 +9,15 @@ export const codeRegex = /`([^`]+)`/
 export const squareBracketRegex = /\\\[(.*?)\\\]/
 export const dollarRegex = /\$([^$]+)\$/
 export const boldRegex = /\*\*([^*]+)\*\*/
-export const explanationRegex = /%%([\s\S]+?)%%/
+export const explanationRegex = /\[\[([\s\S]+?)\]\]/
 export const italicRegex = /\*([^*]+)\*/
 export const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/
 export const tableRegex = /^(\|(?:[^\r\n|]*\|?)+(\r?\n\|(?:[^\r\n|]*\|?)+)*)/m
 export const inputRegex = /\{\{(.*?#.*?)\}\}/ // match at least on # to be an input
 export const listRegex = /^((?:\s*-\s[^*].*(\r?\n|$))+)/m
+export const headerRegex = /(?:^|\n)#+(.*)$/m
+export const emptyLineRegex = /(?<=\n)\s*(?=\n)/
+export const lineBreakRegex = / {2,}(?=\n|$)/
 // TODO check the regexes for the table and list again
 
 /**
@@ -28,6 +31,7 @@ export type ParseTreeNode =
   | { kind: "```"; child: string; language?: string }
   | { kind: "$$" | "$"; child: string }
   | { kind: "**" | "*" | ">"; child: ParseTree }
+  | { kind: "#"; tags: number; child: string }
   | { kind: "a"; child: ParseTree; url: string }
   | {
       kind: "table"
@@ -35,7 +39,8 @@ export type ParseTreeNode =
     }
   | { kind: "input"; child: string }
   | { kind: "list"; child: ListItem[] }
-  | { kind: "%%"; child: string; id: string }
+  | { kind: "[["; child: string; id: string }
+  | { kind: "\n" | " " }
 
 /**
  * The parseMarkdown function parses markdown-like text into a parse tree.
@@ -47,14 +52,17 @@ export function parseMarkdown(md: string): ParseTree {
   if (md === "") return []
 
   const regexes = [
+    { regex: emptyLineRegex, kind: "\n", markdown: false },
+    { regex: lineBreakRegex, kind: " ", markdown: false },
     { regex: tableRegex, kind: "table", markdown: false },
     { regex: listRegex, kind: "list", markdown: true },
     { regex: codeBlockRegex, kind: "```", markdown: false },
     { regex: quoteBlockRegex, kind: ">", markdown: true },
     { regex: inputRegex, kind: "input", markdown: false },
     { regex: codeRegex, kind: "`", markdown: false },
+    { regex: headerRegex, kind: "#", markdown: true },
     { regex: squareBracketRegex, kind: "$$", markdown: false },
-    { regex: explanationRegex, kind: "%%", markdown: false },
+    { regex: explanationRegex, kind: "[[", markdown: false },
     { regex: dollarRegex, kind: "$", markdown: false },
     { regex: boldRegex, kind: "**", markdown: true },
     { regex: italicRegex, kind: "*", markdown: true },
@@ -93,8 +101,8 @@ export function parseMarkdown(md: string): ParseTree {
         const after = md.slice(match.index + match[0].length)
         return [...parseMarkdown(before), node, ...parseMarkdown(after)]
       }
-      if (kind === "%%") {
-        const splitMatch = match[1].split("#")
+      if (kind === "[[") {
+        const splitMatch = match[1].split("|")
         const node: ParseTreeNode = {
           kind,
           child: splitMatch[0],
@@ -103,6 +111,30 @@ export function parseMarkdown(md: string): ParseTree {
         const before = md.slice(0, match.index)
         const after = md.slice(match.index + match[0].length)
         return [...parseMarkdown(before), node, ...parseMarkdown(after)]
+      }
+      if (kind === "#") {
+        const node: ParseTreeNode = {
+          kind,
+          tags: countHashtagsBeginningOfLine(match[0]),
+          child: match[1],
+        }
+        const before = md.slice(0, match.index)
+        const after = md.slice(match.index + match[0].length)
+        return [...parseMarkdown(before), node, ...parseMarkdown(after)]
+      }
+      if (kind === "\n" || kind === " ") {
+        const before = md.slice(0, match.index)
+        const after = md.slice(match.index + match[0].length)
+        if (before.trim() === "" && after.trim() === "") {
+          return [md]
+        }
+        if (before.trim() === "") {
+          return [...parseMarkdown(after)]
+        }
+        if (after.trim() === "") {
+          return [...parseMarkdown(before)]
+        }
+        return [...parseMarkdown(before), { kind: kind } as ParseTreeNode, ...parseMarkdown(after)]
       }
       if (kind === "input") {
         const node: ParseTreeNode = {
@@ -287,4 +319,16 @@ function parseMarkdownList(list: string): ListItem[] {
     }
   }
   return result
+}
+
+/**
+ * Count the number of hashtags at the beginning of a line
+ * @param line The line to count the hashtags in
+ */
+function countHashtagsBeginningOfLine(line: string): number {
+  // first remove all leading whitespaces and linebreaks
+  line = line.trimStart()
+  // then count the number of hashtags
+  const match = line.match(/^#+/)
+  return match ? match[0].length : 0
 }

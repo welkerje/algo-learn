@@ -24,7 +24,7 @@ const translations: Translations = {
     queueEmpty: "Currently the queue is empty.",
     queueContainsValues: `The queue currently contains the following elements (*with the front at the lowest index*):`,
     freeTextInput:
-      `Consider a %%**Queue**#Queue%% **"Q"**. ` +
+      `Consider a [[**Queue**|Queue]] **"Q"**. ` +
       `{{0}} **We perform the following operations:** {{1}}`,
   },
   de: {
@@ -37,7 +37,7 @@ const translations: Translations = {
     queueEmpty: "Die Queue ist aktuell leer.",
     queueContainsValues: `Die Queue enthält aktuell folgende Elemente (*mit dem Front-Element am niedrigsten Index*):`,
     freeTextInput:
-      `Betrachte eine %%**Queue**#Queue%% **"Q"**. ` +
+      `Betrachte eine [[**Queue**|Queue]] **"Q"**. ` +
       `{{0}} **Wir führen die folgenden Operationen aus:** {{1}}`,
   },
 }

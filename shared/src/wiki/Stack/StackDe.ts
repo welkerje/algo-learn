@@ -1,37 +1,37 @@
 export const StackDeText = `
-# Deutsch fehlt gerade
+## Einführung in Stacks
 
-## Introduction to Stack
+Ein **Stack** ist eine Datenstruktur welche nachdem **Last In, First Out (LIFO)** Prinzip arbeitet. Das bedeutet, dass das zuletzt hinzugefügte Element (push) als erstes entfernt wird (pop).
 
-A **Stack** is a data structure that operates on the **Last In, First Out (LIFO)** principle. This means that the last element added (pushed) is the first one to be removed (popped).
+## Schlüsseloperationen
+- \`stack.push(x)\` Fügt das Element x zum Stack hinzu.
+- \`stack.pop()\` Entfernt das oberste Element vom Stack.
+- \`stack.isEmpty()\` Überprüft ob der Stack leer ist.
 
-## Key Operations
-- \`stack.push(x)\` | Adds an element to the top of the stack.
-- \`stack.pop()\` | Removes the element from the top of the stack.
-- \`stack.isEmpty()\` | Checks if the stack is empty.
-
-## Examples
+## Beispiele
 ### Push Operation
-Consider a stack with one element:
+Du hast folgenden Stack:
 \`\`\`array
 {"array":[1,"-"],"startingIndex":0,"secondRowName":{"de":"Wert","en":"Value"}}
 \`\`\`
-We perform the following operation:  
+Wir führen folgende Operation aus:  
 \`stack.push(2)\`
-Now, the stack contains two elements:
+
+Nun enthält der Stack zwei Elemente:
 \`\`\`array
 {"array":[1,2],"startingIndex":0,"secondRowName":{"de":"Wert","en":"Value"}}
 \`\`\`
 ### Pop Operation
-We perform the following operation:  
+Wir führen anschließend folgende Operation aus: 
 \`stack.pop()\`
-Now, the stack contains one element:
+
+Das oberste Element wird entfernt und der Stack enthält nur noch ein Element:
 \`\`\`array
 {"array":[1,"-"],"startingIndex":0,"secondRowName":{"de":"Wert","en":"Value"}}
 \`\`\`
-### Is Empty Operation
-We perform the following operation:  
+### isEmpty Operation
+Zuletzt führen wir folgende Operation aus:
 \`stack.isEmpty()\`
 
-This operation returns \`False\` as the stack is not empty.
+Diese Operation gibt \`False\` zurück, da der Stack nicht leer ist.
 `
